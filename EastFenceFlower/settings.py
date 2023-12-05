@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os.path
 from pathlib import Path
+import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls',
+    'login',
 ]
 
 MIDDLEWARE = [
@@ -48,12 +50,38 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+# REST_FRAMEWORK = {
+#     # a.在全局指定默认的认证类（指定认证方式）
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication', # 先进行token认证(Django 3.1 版本不能用了)
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#         # b.Session会话认证
+#         'rest_framework.authentication.SessionAuthentication',  # 次要进行session认证
+#         'rest_framework.authentication.BasicAuthentication'
+#     ],
+#     # 指定使用的权限类
+#     # a.在全局指定默认的权限类（当认证通过之后，可以获取何种权限）
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         # AllowAny 不管是否有认证成功，都能获取所有权限
+#         # IsAdminUser 管理员（管理员需要登录）具备所有权限
+#         # IsAuthenticated 只要登录，就具备所有权限
+#         # IsAuthenticatedOrReadOnly，如果登录了就具备所有权限，不登录只具备读取数据的权限
+#         'rest_framework.permissions.AllowAny',
+#     ],
+#     # 其他设置...
+# }
+#
+# JWT_AUTH = {  # 导包： import datetime
+#     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # jwt有效时间
+# }
+
 ROOT_URLCONF = 'EastFenceFlower.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,7 +104,8 @@ DATABASES = {
         # 数据库引擎配置
         'ENGINE': 'django.db.backends.mysql',
         # 数据库的名字
-        'NAME': 'vote',
+        'NAME': 'flower',
+        # 'NAME': 'vote',
         # 数据库服务器的IP地址（本机可以写localhost或127.0.0.1）
         'HOST': 'localhost',
         # 启动MySQL服务的端口号
@@ -88,7 +117,10 @@ DATABASES = {
         'CHARSET': 'utf8',
         # 数据库时间日期的时区设定
         'TIME_ZONE': 'Asia/Chongqing',
-    }
+
+        'OPTIONS': {'charset': 'utf8mb4'},
+
+    },
 }
 
 # Password validation

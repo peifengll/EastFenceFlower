@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.urls import path
 
 from first.views import show_index, show_index2, show_index3
+from login.views import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', show_index),
     path('hello2/', show_index2),
     path('hello3/', show_index3),
+    path('login/', LoginView.as_view()),
 ]
