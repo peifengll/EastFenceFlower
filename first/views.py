@@ -1,14 +1,26 @@
 from random import sample
-
+from rest_framework.views import APIView
 from django.shortcuts import render
 
 # Create your views here.
 
 from django.http import HttpResponse
+from rest_framework import permissions
+from rest_framework_simplejwt import authentication
 
 
 def show_index(request):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (authentication.JWTAuthentication,)
     return HttpResponse('<h1>Hello, Django!</h1>')
+
+
+class ShowIndexView(APIView):
+    # permission_classes = [permissions.IsAuthenticated]
+    # authentication_classes = (authentication.JWTAuthentication,)
+
+    def get(self,  request, *args, **kwargs):
+        return HttpResponse('<h1>Hello, Django!</h1>')
 
 
 def show_index2(request):

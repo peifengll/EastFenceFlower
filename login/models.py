@@ -25,6 +25,14 @@ class Manager(models.Model):
     stage = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True, db_comment='状态')
     date = models.DateField(blank=True, null=True, db_comment='入职日期')
 
+    @property
+    def is_authenticated(self):
+        """
+        Always return True. This is a way to tell if the user has been
+        authenticated in templates.
+        """
+        return True
+
     class Meta:
         managed = False
         db_table = 'manager'

@@ -36,11 +36,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',
     'polls',
     'login',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,31 +54,35 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8000',
+)
 
-# REST_FRAMEWORK = {
-#     # a.在全局指定默认的认证类（指定认证方式）
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication', # 先进行token认证(Django 3.1 版本不能用了)
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#         # b.Session会话认证
-#         'rest_framework.authentication.SessionAuthentication',  # 次要进行session认证
-#         'rest_framework.authentication.BasicAuthentication'
-#     ],
-#     # 指定使用的权限类
-#     # a.在全局指定默认的权限类（当认证通过之后，可以获取何种权限）
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         # AllowAny 不管是否有认证成功，都能获取所有权限
-#         # IsAdminUser 管理员（管理员需要登录）具备所有权限
-#         # IsAuthenticated 只要登录，就具备所有权限
-#         # IsAuthenticatedOrReadOnly，如果登录了就具备所有权限，不登录只具备读取数据的权限
-#         'rest_framework.permissions.AllowAny',
-#     ],
-#     # 其他设置...
-# }
-#
-# JWT_AUTH = {  # 导包： import datetime
-#     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # jwt有效时间
-# }
+## 全局配置
+REST_FRAMEWORK = {
+    # 设置所有接口都需要被验证
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 设置所有接口都需要被验证
+        'rest_framework.permissions.IsAuthenticated',  # 默认权限为验证用户
+    ),
+    # 用户登录的认证方式
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # 使用rest_framework_simplejwt验证身份
+        # sesssion认证
+        'rest_framework.authentication.SessionAuthentication',
+        # 基本认证
+        'rest_framework.authentication.BasicAuthentication',
+    ]
+}
+
+# 在 setting 配置认证插件的参数
+SIMPLE_JWT = {
+    # token有效时长(返回的 access 有效时长)
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=15),
+    # token刷新的有效时间(返回的 refresh 有效时长)
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(seconds=20),
+    # "TOKEN_OBTAIN_SERIALIZER": "libs.utils.jwtSerializer.LoginSerializer",
+}
 
 ROOT_URLCONF = 'EastFenceFlower.urls'
 

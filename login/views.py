@@ -1,14 +1,12 @@
 import uuid
 
-import redis
-from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenViewBase
 
+from libs.utils.jwtSerializer import LoginSerializer
 from login.models import Manager
-from utils.base_response import BaseResponse
+from libs.utils.base_response import BaseResponse
 from rest_framework.response import Response
-
-from utils.redis_pool import POOL
 
 
 # Create your views here.
@@ -21,8 +19,13 @@ def login(request):
     qsst = Manager.objects.filter(phone=phone, password=password)
 
 
-class LoginView(APIView):
-    def post(self, request):
+class LoginView(TokenViewBase):
+    permission_classes = ()
+    authentication_classes = []
+    serializer_class = LoginSerializer
+
+    def post(self, request,*args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         result = BaseResponse()
         phone = request.data.get('phone', '')
         password = request.data.get('password', '')
@@ -45,4 +48,8 @@ class LoginView(APIView):
             print(e)
             result.code = 501
             result.error = "创建令牌失败啦"
-        return Response(result.dict)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except Exception as e:
+            raise ValueError(f'验证失败： {e}')
+        return Response(result.dict, serializer.validate_data)
