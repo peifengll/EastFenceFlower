@@ -17,15 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-import polls
-from first.views import show_index, show_index2, show_index3, ShowIndexView
-from login.views import LoginView
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('ac/', include('polls.urls', )),
-    path('hello/', ShowIndexView.as_view(), name="hello"),
-    path('hello2/', show_index2),
-    path('hello3/', show_index3),
-    path('login/', LoginView.as_view(), name='check and token'),
+    path('', include('login.urls'), name='login about'),
 ]

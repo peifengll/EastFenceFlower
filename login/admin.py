@@ -8,9 +8,9 @@ from login.models import Manager
 
 class ManagerModelAdmin(admin.ModelAdmin):
     list_display = (
-        'manager_id',
+        'id',
         'mname',
-        'phone',
+        'username',
         'password',
         'photo',
         'days',
@@ -22,7 +22,7 @@ class ManagerModelAdmin(admin.ModelAdmin):
         'date',
     )
     search_fields = ('name',)
-    ordering = ('manager_id',)
+    ordering = ('id',)
 
 
 admin.site.register(Manager, ManagerModelAdmin)

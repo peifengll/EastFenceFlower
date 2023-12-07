@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'polls',
     'login',
 ]
 
@@ -67,13 +66,16 @@ REST_FRAMEWORK = {
     ),
     # 用户登录的认证方式
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',  # 使用rest_framework_simplejwt验证身份
+        'libs.utils.jwt.MyJWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',  # 使用rest_framework_simplejwt验证身份
         # sesssion认证
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         # 基本认证
-        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
     ]
 }
+
+# AUTH_USER_MODEL = 'login.Manager'
 
 # 在 setting 配置认证插件的参数
 SIMPLE_JWT = {

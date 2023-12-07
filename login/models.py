@@ -9,11 +9,11 @@ from django.db import models
 
 
 class Manager(models.Model):
-    manager_id = models.AutoField(primary_key=True, db_comment='管理员编号')
+    id = models.AutoField(primary_key=True, db_comment='管理员编号', db_column='manager_id')
     mname = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True,
                              db_comment='管理员名字')
-    phone = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True,
-                             db_comment='联系方式')
+    username = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True,
+                                db_comment='联系方式', db_column='phone')
     password = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True, db_comment='密码')
     photo = models.CharField(max_length=255, db_collation='utf8_general_ci', blank=True, null=True, db_comment='照片')
     days = models.CharField(max_length=10, db_collation='utf8_general_ci', blank=True, null=True, db_comment='到店天数')
@@ -25,6 +25,8 @@ class Manager(models.Model):
     stage = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True, db_comment='状态')
     date = models.DateField(blank=True, null=True, db_comment='入职日期')
 
+    # identifier = models.CharField(max_length=40, unique=True)
+    # USERNAME_FIELD = 'identifier'
     @property
     def is_authenticated(self):
         """
@@ -36,17 +38,3 @@ class Manager(models.Model):
     class Meta:
         managed = False
         db_table = 'manager'
-        # fields = (
-        #     'manager_id',
-        #     'mname',
-        #     'phone',
-        #     'password',
-        #     'photo',
-        #     'days',
-        #     'address',
-        #     'restrict',
-        #     'sex',
-        #     'age',
-        #     'stage',
-        #     'date',
-        # )
