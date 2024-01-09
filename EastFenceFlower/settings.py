@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-mfehp%5vxk7@=3c&ql@eu@!i$&gi8=fj7c58+p@2svh=%y0(9v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '172.17.145.41',
+    '*'
+]
 
 # Application definition
 
@@ -40,6 +43,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'login',
+    'users',
+    'models',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -53,8 +59,38 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# 跨域增加忽略
+CORS_ALLOW_CREDENTIALS = True  # 允许携带Cookie
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
+    [
+        'http://127.0.0.1:*',
+        'https://172.17.145.41:*',
+    ]
+)
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Pragma',
 )
 
 ## 全局配置
