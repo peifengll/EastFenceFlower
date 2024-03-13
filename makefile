@@ -4,6 +4,16 @@ run:
 newapp:
 	python manage.py startapp  <app_name>
 
+force:
+	git fetch --all
+	git reset --hard origin/main
+	git pull
+
+inreq:
+	pip install -r requirements.txt  -i https://mirrors.aliyun.com/pypi/simple
+
+outreq:
+	pip list --format=freeze> requirements.txt
 
 
 # python manage.py inspectdb --database default tablename1 tablename2 >myApp/models.py
