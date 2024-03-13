@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'users',
     'models',
     'orders',
+    'flowers',
+    'goods',
 ]
 
 MIDDLEWARE = [
@@ -153,7 +155,7 @@ DATABASES = {
         'NAME': 'flower',
         # 'NAME': 'vote',
         # 数据库服务器的IP地址（本机可以写localhost或127.0.0.1）
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         # 启动MySQL服务的端口号
         'PORT': 3306,
         # 数据库用户名和口令

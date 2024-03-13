@@ -2,7 +2,7 @@
 run:
 	python manage.py runserver 0.0.0.0:8001
 newapp:
-	python manage.py startapp  <app_name>
+	python manage.py startapp  $(name)
 
 force:
 	git fetch --all

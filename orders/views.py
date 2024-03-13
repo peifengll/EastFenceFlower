@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 import models.models
 from libs.utils.base_response import BaseResponse
 from models import serializer
+from models.serializer import OrderSerializer
 
 
 # Create your views here.
@@ -52,3 +53,14 @@ class OrdersToDeliverNum(APIView):
         print(a)
         return BaseResponse(data=a, status=200, )
 
+
+class OrdersShowAll(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+        #  返回stage为0022的订单，也就是待备货
+        info = models.models.Order.objects.all()
+        print(info)
+        ser = OrderSerializer(info, many=True)
+        return BaseResponse(data=ser.data, status=200, )

@@ -247,25 +247,24 @@ class Operate(models.Model):
 
 class Order(models.Model):
     order_id = models.AutoField(primary_key=True, db_comment='订单编号')
-    name = models.CharField(max_length=50, blank=True, null=True, db_comment='商品名称')
-    size = models.CharField(max_length=50, blank=True, null=True, db_comment='尺寸')
-    image = models.CharField(max_length=255, blank=True, null=True, db_comment='商品图')
     time = models.DateTimeField(blank=True, null=True, db_comment='下单时间')
     stage = models.CharField(max_length=50, blank=True, null=True, db_comment='订单状态')
-    address = models.CharField(max_length=50, blank=True, null=True, db_comment='收货地址')
+    address_id = models.CharField(max_length=50, blank=True, null=True, db_comment='收货地址，对应address表的id')
     money = models.CharField(max_length=50, blank=True, null=True, db_comment='金额')
     user_id = models.CharField(max_length=10, blank=True, null=True, db_comment='下单用户编号')
-    phone = models.CharField(max_length=50, blank=True, null=True, db_comment='联系方式')
     beihuo = models.CharField(max_length=50, blank=True, null=True, db_comment='备货人员')
     beihuo_id = models.CharField(max_length=10, blank=True, null=True, db_comment='备货人员编号')
     peisong = models.CharField(max_length=50, blank=True, null=True, db_comment='配送人员')
     peisong_id = models.CharField(max_length=10, blank=True, null=True, db_comment='配送人员编号')
     remark = models.CharField(max_length=255, blank=True, null=True, db_comment='评价')
+    cart_id = models.CharField(max_length=50, blank=True, null=False, db_comment='cart id')
+    aname = models.CharField(max_length=50, blank=True, null=False, db_comment='收货人名字')
+    address = models.CharField(max_length=50, blank=True, null=False, db_comment='收货人地址')
+    phone = models.CharField(max_length=50, blank=True, null=False, db_comment='收货人手机号')
 
     class Meta:
         managed = False
         db_table = 'order'
-
 
 class Sort(models.Model):
     sort_id = models.CharField(max_length=50, db_comment='分类编号')
