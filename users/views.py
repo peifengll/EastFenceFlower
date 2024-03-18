@@ -34,6 +34,20 @@ class ShowUsersInfo(APIView):
         return BaseResponse(data=ser.data, status=200, )
 
 
+class GetUsersPageTotal(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+        pagetotal = 6
+        num = models.models.User.objects.all().count()
+        if num % pagetotal == 0:
+            num = num // pagetotal
+        else:
+            num = num // pagetotal + 1
+        return BaseResponse(data=num, status=200, )
+
+
 class ShowNewUsersToday(APIView):
     authentication_classes = []  # 禁用所有认证类
     permission_classes = []  # 允许任何用户访问
@@ -105,5 +119,5 @@ class UserSearch(APIView):
         userList = models.models.User.objects.filter(query_params)
 
         # print("userlist", userList)
-        ser = serializer.UserSerializer(userList,many=True)
+        ser = serializer.UserSerializer(userList, many=True)
         return BaseResponse(data=ser.data, status=200, )
