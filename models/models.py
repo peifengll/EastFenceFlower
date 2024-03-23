@@ -99,6 +99,8 @@ class Cart(models.Model):
     gname = models.CharField(max_length=50, blank=True, null=True, db_comment='商品名')
     goods_id = models.CharField(max_length=50, blank=True, null=True, db_comment='商品编号')
     num = models.CharField(max_length=50, blank=True, null=True, db_comment='数量')
+    price = models.CharField(max_length=50, blank=True, null=True, db_comment='价格')
+    size = models.CharField(max_length=50, blank=True, null=True, db_comment='大中小')
 
     class Meta:
         managed = False
@@ -194,15 +196,16 @@ class Flower(models.Model):
 
 class Goods(models.Model):
     goods_id = models.AutoField(primary_key=True, db_comment='商品编号')
+    good_sort = models.CharField(max_length=50, blank=True, null=True, db_comment='商品种类')
     gname = models.CharField(max_length=50, blank=True, null=True, db_comment='商品名称')
     flower_id = models.CharField(max_length=50, blank=True, null=True, db_comment='花编号')
     image = models.CharField(max_length=255, blank=True, null=True, db_comment='商品图片')
-    intor = models.CharField(max_length=255, blank=True, null=True, db_comment='简介')
+    ename = models.CharField(max_length=255, blank=True, null=True, db_comment='英文名')
     size = models.CharField(max_length=50, blank=True, null=True, db_comment='尺寸')
     charge = models.CharField(max_length=50, blank=True, null=True, db_comment='价格')
     total_num = models.CharField(max_length=50, blank=True, null=True, db_comment='总数')
     stage = models.CharField(max_length=50, blank=True, null=True, db_comment='库存状态')
-    salenum = models.CharField(max_length=50, blank=True, null=True, db_comment='销售量')
+    salenum = models.IntegerField(max_length=50, blank=True, null=True, db_comment='销售量')
 
     class Meta:
         managed = False
@@ -266,6 +269,7 @@ class Order(models.Model):
         managed = False
         db_table = 'order'
 
+
 class Sort(models.Model):
     sort_id = models.CharField(max_length=50, db_comment='分类编号')
     tab_id = models.CharField(max_length=50, blank=True, null=True, db_comment='标签编号')
@@ -302,10 +306,48 @@ class User(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True, db_comment='现居地')
     time = models.DateField(blank=True, null=True, db_comment='注册日期')
     postnum = models.CharField(max_length=10, blank=True, null=True, db_comment='邮政编码')
-    e_mail = models.CharField(db_column='e-mail', max_length=50, blank=True, null=True, db_comment='邮箱')  # Field renamed to remove unsuitable characters.
+    e_mail = models.CharField(db_column='e-mail', max_length=50, blank=True, null=True,
+                              db_comment='邮箱')  # Field renamed to remove unsuitable characters.
     intor = models.CharField(max_length=255, blank=True, null=True, db_comment='个签')
     stage = models.CharField(max_length=50, blank=True, null=True, db_comment='用户等级')
 
     class Meta:
         managed = False
         db_table = 'user'
+
+
+class Likes(models.Model):
+    like_id = models.AutoField(primary_key=True, db_comment='主键，唯一id')
+    user_id = models.IntegerField(db_comment='用户')
+    flower_id = models.IntegerField(db_comment='用户喜欢的一朵花的id')
+    image = models.CharField(max_length=255, blank=True, null=True, db_comment='花的图片')
+    price = models.IntegerField(blank=True, null=True, db_comment='该花最小号的价格')
+
+    class Meta:
+        managed = False
+        db_table = 'likes'
+
+
+class Msg(models.Model):
+    msgid = models.AutoField(db_column='msgId', primary_key=True, db_comment='消息id')  # Field name made lowercase.
+    chatid = models.IntegerField(db_column='chatId', blank=True, null=True, db_comment='会话id')  # Field name made lowercase.
+    userid = models.CharField(db_column='userId', max_length=20, blank=True, null=True, db_comment='用户id')  # Field name made lowercase.
+    userpro = models.CharField(db_column='userPro', max_length=10, blank=True, null=True, db_comment='用户属性')  # Field name made lowercase.
+    creattime = models.TimeField(db_column='creatTime', blank=True, null=True, db_comment='创建时间')  # Field name made lowercase.
+    chatmsg = models.CharField(db_column='chatMsg', max_length=255, blank=True, null=True, db_comment='消息内容')  # Field name made lowercase.
+    readstate = models.CharField(db_column='readState', max_length=10, blank=True, null=True, db_comment='查看状态，0未读，1已读')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'msg'
+
+
+class Chat(models.Model):
+    chatid = models.AutoField(db_column='chatId', primary_key=True, db_comment='会话id')  # Field name made lowercase.
+    userid = models.IntegerField(db_column='userId', blank=True, null=True, db_comment='用户id')  # Field name made lowercase.
+    chattime = models.DateField(db_column='chatTime', blank=True, null=True, db_comment='会话创建时间')  # Field name made lowercase.
+    chatstate = models.CharField(db_column='chatState', max_length=10, blank=True, null=True, db_comment='会话状态，0正在进行，1已结束')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'chat'

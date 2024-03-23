@@ -64,3 +64,16 @@ class OrdersShowAll(APIView):
         print(info)
         ser = OrderSerializer(info, many=True)
         return BaseResponse(data=ser.data, status=200, )
+
+
+class OrdersOneById(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+        id = request.GET.get("orderid")
+        #  返回stage为0022的订单，也就是待备货
+        info = models.models.Order.objects.get(order_id=id)
+        print(info)
+        ser = OrderSerializer(info)
+        return BaseResponse(data=ser.data, status=200, )

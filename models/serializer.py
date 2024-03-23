@@ -9,3 +9,15 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.models.Order
         fields = '__all__'
+
+
+class GoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.models.Goods
+        fields = '__all__'
+
+
+class GoodSerializerFirstThree(serializers.ModelSerializer):
+    class Meta:
+        model = models.models.Goods
+        fields = ('gname', 'salenum', 'image', 'ename', 'goods_id')
