@@ -14,7 +14,7 @@ class GoodsAllInfo(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def get(self, request, *args, **kwargs):
-        info = models.Goods.objects.all()
+        info = models.Goods.objects.order_by("flower_id").all()
         print(info)
         ser = GoodSerializer(info, many=True)
         return BaseResponse(data=ser.data, status=200, )
