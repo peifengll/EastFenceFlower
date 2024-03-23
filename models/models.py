@@ -169,6 +169,7 @@ class Flower(models.Model):
     flower_id = models.AutoField(primary_key=True, db_comment='花编号')
     fname = models.CharField(max_length=50, blank=True, null=True, db_comment='花名')
     enname = models.CharField(max_length=50, blank=True, null=True, db_comment='英语名字')
+    buy = models.CharField(max_length=20, blank=True, null=True, db_comment='进价')
     num = models.CharField(max_length=50, blank=True, null=True, db_comment='库存数量')
     sort = models.CharField(max_length=50, blank=True, null=True, db_comment='分类')
     feed = models.CharField(max_length=255, blank=True, null=True, db_comment='养殖方式')

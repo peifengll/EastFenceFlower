@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.views import APIView
 
@@ -43,22 +44,26 @@ class GoodsInfoSearch(APIView):
         id = request.data.get('goodsid')
         name = request.data.get('goodsname')
         category = request.data.get('goodsort')
+        stage = request.data.get('stage')
         info = None
-        print(name,category)
+        print(name, category)
         try:
-
+            query = Q()
             if id is not None and id != "":
-                info = models.Goods.objects.filter(goods_id=id)
-            else:
-                if (name is not None and name !="")and( category is not None and category!=""):
-                    info = models.Goods.objects.filter(gname__icontains=name, good_sort=category)
-                elif name is not None and name!="":
-                    info = models.Goods.objects.filter(gname__icontains=name)
-                elif category is not None and category!="":
-                    info = models.Goods.objects.filter(good_sort=category)
-                else:
-                    info = models.Goods.objects.order_by("flower_id").all()
+                # info = models.Goods.objects.filter(goods_id=id)
+                query &= Q(goods_id=id)
+
+            if name is not None and name != "":
+                # info = models.Goods.objects.filter(gname__icontains=name)
+                query &= Q(gname__icontains=name)
+            if category is not None and category != "":
+                # info = models.Goods.objects.filter(good_sort=category)
+                query &= Q(good_sort=category)
+            if stage:
+                query &= Q(stage=stage)
                 # print(info.query.__str__())
+            info = models.Goods.objects.filter(query)
+            print(info.query.__str__())
         except Exception as e:
             return BaseResponse(status=500, msg="服务器错误")
         ser = GoodSerializer(info, many=True)

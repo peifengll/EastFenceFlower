@@ -23,5 +23,6 @@ urlpatterns = [
     # new
     path('', include('users.urls'), name='user about'),
     path('', include('orders.urls'), name='order about'),
-    path('', include('goods.urls'), name='order about'),
+    path('', include('goods.urls'), name='goods about'),
+    path('', include('flowers.urls'), name='flower about'),
 ]

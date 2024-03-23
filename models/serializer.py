@@ -21,3 +21,9 @@ class GoodSerializerFirstThree(serializers.ModelSerializer):
     class Meta:
         model = models.models.Goods
         fields = ('gname', 'salenum', 'image', 'ename', 'goods_id')
+
+
+class FlowerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.models.Flower
+        fields = '__all__'
