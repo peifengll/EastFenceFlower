@@ -1,4 +1,5 @@
 from django.db import connection
+from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.views import APIView
 
@@ -77,3 +78,77 @@ class OrdersOneById(APIView):
         print(info)
         ser = OrderSerializer(info)
         return BaseResponse(data=ser.data, status=200, )
+
+
+class OrdersSearch(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+        order_id = request.data.get("order_id")
+        stage = request.data.get("stage")
+        user_id = request.data.get("user_id")
+        phone = request.data.get("phone")
+        info = None
+        try:
+            query = Q()
+            if order_id:
+                query &= Q(order_id=order_id)
+            if stage:
+                query &= Q(stage=stage)
+            if user_id:
+                query &= Q(user_id=user_id)
+            if phone:
+                query &= Q(phone__icontains=phone)
+            info = models.models.Order.objects.filter(query)
+            # print("sss: ",info.query)
+        except Exception as e:
+            return BaseResponse(status=500, msg=e.__str__())
+        ser = OrderSerializer(info, many=True)
+        return BaseResponse(data=ser.data, status=200, )
+
+
+# 修改 地址 状态
+class OrdersUpdate(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def put(self, request, *args, **kwargs):
+        order_id = request.data.get("order_id")
+        if not order_id:
+            return BaseResponse(status=400, msg="order_id不能为空")
+        stage = request.data.get("stage")
+        phone = request.data.get("phone")
+        address = request.data.get("address")
+        try:
+            info = models.models.Order.objects.get(order_id=order_id)
+            if stage:
+                info.stage = stage
+            if phone:
+                info.phone = phone
+            if address:
+                info.address = address
+            info.save()
+            # print("sss: ",info.query)
+        except Exception as e:
+            return BaseResponse(status=500, msg=e.__str__())
+        return BaseResponse(status=200, msg="修改成功")
+
+
+class OrdersDel(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def delete(self, request, *args, **kwargs):
+        order_id = request.GET.get("order_id")
+        if not order_id:
+            return BaseResponse(status=400, msg="order_id不能为空")
+        try:
+            info = models.models.Order.objects.get(order_id=order_id)
+            info.delete()
+            # print("sss: ",info.query)
+        except models.models.Order.DoesNotExist:
+            return BaseResponse(status=322, msg="订单不存在")
+        except Exception as e:
+            return BaseResponse(status=500, msg=e.__str__())
+        return BaseResponse(status=200, msg="删除成功")

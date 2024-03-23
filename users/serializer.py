@@ -12,10 +12,11 @@ from models.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['user_id', 'uname', 'sex', 'age', 'stage', 'phone', 'address']
+        fields = '__all__'
+        # fields = ['user_id', 'uname', 'sex', 'age', 'stage', 'phone', 'address']
 
 
 class UserNewSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['user_id', 'photo','uname', 'sex', 'age', 'stage', 'phone', 'address']
+        fields = ['user_id', 'photo', 'uname', 'sex', 'age', 'stage', 'phone', 'address']
