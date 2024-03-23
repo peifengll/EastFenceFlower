@@ -40,14 +40,28 @@ class GoodsInfoSearch(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def get(self, request, *args, **kwargs):
-        id = request.GET.get('goodsid')
-        name = request.GET.get('goodsname')
-        category = request.GET.get('goodsort')
-        if id is None:
-            return BaseResponse(status=400, msg="参数错误")
-        info = models.Goods.objects.filter(goods_id=id)
-        print(info)
-        ser = GoodSerializer(info)
+        id = request.data.get('goodsid')
+        name = request.data.get('goodsname')
+        category = request.data.get('goodsort')
+        info = None
+        print(name,category)
+        try:
+
+            if id is not None and id != "":
+                info = models.Goods.objects.filter(goods_id=id)
+            else:
+                if (name is not None and name !="")and( category is not None and category!=""):
+                    info = models.Goods.objects.filter(gname__icontains=name, good_sort=category)
+                elif name is not None and name!="":
+                    info = models.Goods.objects.filter(gname__icontains=name)
+                elif category is not None and category!="":
+                    info = models.Goods.objects.filter(good_sort=category)
+                else:
+                    info = models.Goods.objects.order_by("flower_id").all()
+                # print(info.query.__str__())
+        except Exception as e:
+            return BaseResponse(status=500, msg="服务器错误")
+        ser = GoodSerializer(info, many=True)
         return BaseResponse(data=ser.data, status=200, msg="操作成功")
 
 
@@ -152,7 +166,6 @@ class GoodsDeleteById(APIView):
             print(e.__str__())
             return BaseResponse(status=500, msg=e.__str__())
         return BaseResponse(status=200, msg="操作成功")
-
 
 
 #  销量前三名
