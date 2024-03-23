@@ -4,7 +4,8 @@
 
 from django.urls import path
 from libs.utils.jwtSerializer import MyTokenObtainPairView
-from users.views import ShowUsersInfo, ShowNewUsersToday, ShowNewUsersTodayNum, UserSearch, GetUsersPageTotal
+from users.views import ShowUsersInfo, ShowNewUsersToday, ShowNewUsersTodayNum, UserSearch, GetUsersPageTotal, UserAll, \
+    UserDetail, UserDel, UserFirstThree, UserAdd, UserUpdate
 
 urlpatterns = [
     path('userlist/', ShowUsersInfo.as_view()),
@@ -12,5 +13,11 @@ urlpatterns = [
     path('newUsersNum/', ShowNewUsersTodayNum.as_view()),
     path('userSearch/', UserSearch.as_view()),
     path('userpagenum/', GetUsersPageTotal.as_view()),
+    path('user/allinfo', UserAll.as_view()),
+    path('user/detail', UserDetail.as_view()),
+    path('user/del', UserDel.as_view()),
+    path('user/three', UserFirstThree.as_view()),
+    path('user/add', UserAdd.as_view()),
+    path('user/update', UserUpdate.as_view()),
 
 ]

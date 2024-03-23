@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db.models import Q
 from django.utils import timezone
 
@@ -121,3 +123,149 @@ class UserSearch(APIView):
         # print("userlist", userList)
         ser = serializer.UserSerializer(userList, many=True)
         return BaseResponse(data=ser.data, status=200, )
+
+
+class UserAll(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+        userList = models.models.User.objects.all()
+        # print("userlist", userList)
+        ser = serializer.UserSerializer(userList, many=True)
+        return BaseResponse(data=ser.data, status=200, msg="查询成功")
+
+
+class UserDetail(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+        userid = request.GET.get("userid")
+        if not userid:
+            return BaseResponse(data="", status=400, msg="userid 不能为空")
+        try:
+            userList = models.models.User.objects.get(user_id=userid)
+        except Exception as e:
+            return BaseResponse(data="", status=500, msg="查询失败")
+        ser = serializer.UserNewSerializer(userList)
+        return BaseResponse(data=ser.data, status=200, msg="查询成功")
+
+
+class UserUpdate(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def put(self, request, *args, **kwargs):
+        userid = request.data.get("user_id")
+        if not userid:
+            return BaseResponse(data="", status=400, msg="userid 不能为空")
+        photo = request.data.get("photo")
+        uname = request.data.get("uname")
+        keyword = request.data.get("keyword")
+        phone = request.data.get("phone")
+        sex = request.data.get("sex")
+        age = request.data.get("age")
+        address = request.data.get("address")
+        postnum = request.data.get("postnum")
+        e_mail = request.data.get("e_mail")
+        intor = request.data.get("intor")
+        stage = request.data.get("stage")
+
+        try:
+            obj = models.models.User.objects.get(user_id=userid)
+            if photo:
+                obj.photo = photo
+            if uname:
+                obj.uname = uname
+            if keyword:
+                obj.keyword = keyword
+            if phone:
+                obj.phone = phone
+            if sex:
+                obj.sex = sex
+            if age:
+                obj.age = age
+            if address:
+                obj.address = address
+            if postnum:
+                obj.postnum = postnum
+            if e_mail:
+                obj.e_mail = e_mail
+            if intor:
+                obj.intor = intor
+            if stage:
+                obj.stage = stage
+            obj.save()
+        except Exception as e:
+            return BaseResponse(data="", status=500, msg="修改失败"+e.__str__())
+        return BaseResponse(status=200, msg="修改成功")
+
+
+class UserDel(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def delete(self, request, *args, **kwargs):
+        userid = request.GET.get("userid")
+        if not userid:
+            return BaseResponse(data="", status=400, msg="userid 不能为空")
+        try:
+            user = models.models.User.objects.get(user_id=userid)
+            user.delete()
+        except models.models.User.DoesNotExist:
+            return BaseResponse(status=322, msg="用户不存在")
+        except Exception as e:
+            return BaseResponse(data="", status=500, msg="删除失败")
+        return BaseResponse(status=200, msg="删除成功")
+
+
+class UserFirstThree(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+
+        try:
+            user = models.models.User.objects.order_by("-cost")[:3]
+        except Exception as e:
+            return BaseResponse(data="", status=500, msg="查询失败")
+        ser = serializer.UserNewSerializer(user, many=True)
+        return BaseResponse(data=ser.data, status=200, msg="操作成功")
+
+
+class UserAdd(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def post(self, request, *args, **kwargs):
+        photo = request.data.get("photo")
+        uname = request.data.get("uname")
+        keyword = request.data.get("keyword")
+        phone = request.data.get("phone")
+        sex = request.data.get("sex")
+        age = request.data.get("age")
+        address = request.data.get("address")
+        postnum = request.data.get("postnum")
+        e_mail = request.data.get("e_mail")
+        intor = request.data.get("intor")
+        stage = request.data.get("stage")
+        try:
+            models.models.User.objects.create(
+                photo=photo,
+                uname=uname,
+                keyword=keyword,
+                phone=phone,
+                sex=sex,
+                age=age,
+                address=address,
+                time=datetime.now(),
+                postnum=postnum,
+                e_mail=e_mail,
+                intor=intor,
+                stage=stage,
+                cost=0,
+            )
+        except Exception as e:
+            return BaseResponse(status=500, msg="服务器内部错误" + e.__str__())
+        return BaseResponse(status=200, msg="添加成功")
