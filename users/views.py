@@ -136,6 +136,33 @@ class UserAll(APIView):
         return BaseResponse(data=ser.data, status=200, msg="查询成功")
 
 
+class UserSearchView(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+        name = request.data.get("name")
+        age = request.data.get("age")
+        user_id = request.data.get("user_id")
+        phone = request.data.get("phone")
+        try:
+            query = Q()
+            if name:
+                query &= Q(uname__icontains=name)
+            if age:
+                query &= Q(age=age)
+            if user_id:
+                query &= Q(id=user_id)
+            if phone:
+                query &= Q(phone__icontains=phone)
+            userList = models.models.User.objects.filter(query)
+            ser = serializer.UserSerializer(userList, many=True)
+        except Exception as e:
+            return BaseResponse(data=None, status=500, msg="查询失败" + e.__str__())
+        # print("userlist", userList)
+        return BaseResponse(data=ser.data, status=200, msg="查询成功")
+
+
 class UserDetail(APIView):
     authentication_classes = []  # 禁用所有认证类
     permission_classes = []  # 允许任何用户访问
@@ -198,7 +225,7 @@ class UserUpdate(APIView):
                 obj.stage = stage
             obj.save()
         except Exception as e:
-            return BaseResponse(data="", status=500, msg="修改失败"+e.__str__())
+            return BaseResponse(data="", status=500, msg="修改失败" + e.__str__())
         return BaseResponse(status=200, msg="修改成功")
 
 
