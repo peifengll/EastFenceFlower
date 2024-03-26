@@ -157,7 +157,7 @@ class UserSearchView(APIView):
             if age:
                 query &= Q(age=age)
             if user_id:
-                query &= Q(id=user_id)
+                query &= Q(user_id=user_id)
             if phone:
                 query &= Q(phone__icontains=phone)
             userList = models.models.User.objects.filter(query)
