@@ -141,10 +141,15 @@ class UserSearchView(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def get(self, request, *args, **kwargs):
-        name = request.data.get("name")
-        age = request.data.get("age")
-        user_id = request.data.get("user_id")
-        phone = request.data.get("phone")
+        name = request.GET.get("name")
+        age = request.GET.get("age")
+        user_id = request.GET.get("user_id")
+        phone = request.GET.get("phone")
+        # name = request.data.get("name")
+        # age = request.data.get("age")
+        # user_id = request.data.get("user_id")
+        # phone = request.data.get("phone")
+
         try:
             query = Q()
             if name:
