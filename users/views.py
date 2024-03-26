@@ -156,6 +156,8 @@ class UserSearchView(APIView):
             if phone:
                 query &= Q(phone__icontains=phone)
             userList = models.models.User.objects.filter(query)
+            print("sql: ")
+            print(userList.query.__str__())
             ser = serializer.UserSerializer(userList, many=True)
         except Exception as e:
             return BaseResponse(data=None, status=500, msg="查询失败" + e.__str__())
