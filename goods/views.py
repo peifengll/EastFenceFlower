@@ -115,7 +115,7 @@ class GoodsUpdate(APIView):
     def put(self, request, *args, **kwargs):
         good_id = request.data.get("good_id")
         if not good_id:
-            return BaseResponse(status=500, msg="缺少必要参数")
+            return BaseResponse(status=400, msg="缺少必要参数")
         goodsort = request.data.get("good_sort")
         gname = request.data.get("gname")
         flowerid = request.data.get("flower_id")
