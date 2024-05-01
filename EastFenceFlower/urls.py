@@ -16,14 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+
+from EastFenceFlower import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('login.urls'), name='login about'),
-    # new
-    path('', include('users.urls'), name='user about'),
-    path('', include('orders.urls'), name='order about'),
-    path('', include('goods.urls'), name='goods about'),
-    path('', include('flowers.urls'), name='flower about'),
-    path('', include('manager.urls'), name='manager about'),
-]
+                  path('admin/', admin.site.urls),
+                  path('', include('login.urls'), name='login about'),
+                  # new
+                  path('', include('users.urls'), name='user about'),
+                  path('', include('orders.urls'), name='order about'),
+                  path('', include('goods.urls'), name='goods about'),
+                  path('', include('flowers.urls'), name='flower about'),
+                  path('', include('manager.urls'), name='manager about'),
+                  path('', include('operate.urls'), name='operate about'),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

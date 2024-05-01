@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<form action="http://127.0.0.1:8001/flower/upload" enctype='multipart/form-data' method="post">
+    <p>选择图片：<input type="file" name="pic"></p>
+    <input type="text" name="intor" placeholder="请输入intor">
+    <p><input type="submit" value="上传头像"></p>
+</form>
+<script>
+    $(document).ready(function () {
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.append('flowerid', '1');
+            formData.append('index', '2');
+            $.ajax({
+                url: 'http://127.0.0.1:8001/flower/upload',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    // 处理上传成功的响应
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // 处理上传失败的响应
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

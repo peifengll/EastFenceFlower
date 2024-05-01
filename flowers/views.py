@@ -1,7 +1,10 @@
+import numpy as np
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.views import APIView
+import time as time_
 
+from EastFenceFlower import settings
 from libs.utils.base_response import BaseResponse
 from models import models
 from models.serializer import FlowerSerializer
@@ -198,3 +201,62 @@ class FlowerUpdate(APIView):
             return BaseResponse(status=500, msg="服务器错误" + e.__str__())
 
         return BaseResponse(status=200, msg="操作成功")
+
+
+class UploadImageView(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def post(self, request):
+        # 获取一个文件管理器对象
+        flowerid = request.data.get('flowerid')
+        index = request.data.get('index')
+        print("flowerid", flowerid, "index", index)
+        if flowerid is None or flowerid == "":
+            return BaseResponse(msg="flowerid 不能为空未获取到", status=401)
+        file = None
+        if 'pic' in request.FILES:
+            file = request.FILES['pic']
+        if file is None:
+            return BaseResponse(msg="图片未获取到", status=308)
+
+        try:
+            obj = models.Flower.objects.filter(flower_id=flowerid)
+            if file is not None:
+                new_name = getNewName('flower_img')  # 具体实现在自己写的uploads.py下
+                # 将要保存的地址和文件名称
+                where = '%s/flower/%s' % (settings.MEDIA_ROOT, new_name)
+                # 分块保存image
+                content = file.chunks()
+                with open(where, 'wb') as f:
+                    for i in content:
+                        f.write(i)
+                new_name = "/media/flower/" + new_name
+                # 上传文件名称到数据库
+                if index == '1':
+                    obj.update(image=new_name)
+                elif index == '2':
+                    obj.update(image2=new_name)
+                elif index == '3':
+                    obj.update(image3=new_name)
+
+                print("执行了吗： ", new_name)
+            # 返回的httpresponse
+        except Exception as e:
+            print(e)
+            return BaseResponse(msg="服务器内部错误", status=500)
+        return BaseResponse(msg="返回成功", status=200, data={})
+
+
+def getNewName(file_type):
+    # 前面是file_type+年月日时分秒
+    new_name = time_.strftime(file_type + '-%Y%m%d%H%M%S', time_.localtime())
+    # 最后是5个随机数字
+    # Python中的numpy库中的random.randint(a, b, n)表示随机生成n个大于等于a，小于b的整数
+    ranlist = np.random.randint(0, 10, 5)
+    for i in ranlist:
+        new_name += str(i)
+    # 加后缀名
+    new_name += '.jpg'
+    # 返回字符串
+    return new_name
