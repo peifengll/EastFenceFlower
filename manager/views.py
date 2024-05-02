@@ -180,7 +180,7 @@ class ManagerSearchView(APIView):
             if restrict:
                 query &= Q(restrict=restrict)
             if stage:
-                query &= Q(manager_id=stage)
+                query &= Q(stage=stage)
 
             userList = models.models.Manager.objects.filter(query)
             print("sql: ")
