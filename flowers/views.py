@@ -223,9 +223,9 @@ class UploadImageView(APIView):
         print("request data ::", request.data)
         print('*' * 10)
         print("request file ::", request.FILES)
-
+        newdata=request.data
         # 获取一个文件管理器对象
-        flowerid = request.data.get('flower_id')
+        flowerid = newdata.get('flower_id')
         if flowerid is None or flowerid == "":
             return BaseResponse(msg="flowerid 不能为空未获取到", status=401)
         imagefile, image2file, image3file = None, None, None
