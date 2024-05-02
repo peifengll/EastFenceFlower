@@ -16,6 +16,7 @@
         $('form').on('submit', function (e) {
             e.preventDefault();
             var formData = new FormData(this);
+            console.log(formData.values())
             formData.append('flowerid', '1');
             formData.append('index', '2');
             $.ajax({

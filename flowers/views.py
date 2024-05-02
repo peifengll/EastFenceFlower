@@ -226,9 +226,14 @@ class UploadImageView(APIView):
         print("flowerid", flowerid, "index", index)
         if flowerid is None or flowerid == "":
             return BaseResponse(msg="flowerid 不能为空未获取到", status=401)
-        file = None
-        if 'pic' in request.FILES:
-            file = request.FILES['pic']
+        imagefile, image2file, image3file = None, None, None
+        if 'image' in request.FILES:
+            imagefile = request.FILES['image']
+        if 'image2' in request.FILES:
+            image2file = request.FILES['image2']
+        if 'image3' in request.FILES:
+            image3file = request.FILES['image2']
+
         fname = request.data.get("fname")
         enname = request.data.get("enname")
         buy = request.data.get("buy")
@@ -289,7 +294,8 @@ class UploadImageView(APIView):
                 obj.soil = soil
             if lop:
                 obj.lop = lop
-            if file is not None:
+            if imagefile is not None:
+                file = imagefile
                 new_name = getNewName('flower_img')  # 具体实现在自己写的uploads.py下
                 # 将要保存的地址和文件名称
                 where = '%s/flower/%s' % (settings.MEDIA_ROOT, new_name)
@@ -300,13 +306,40 @@ class UploadImageView(APIView):
                         f.write(i)
                 new_name = "/media/flower/" + new_name
                 # 上传文件名称到数据库
-                if index == '1':
-                    obj.image = new_name
-                elif index == '2':
-                    obj.image2 = new_name
-                elif index == '3':
-                    obj.image3 = new_name
-                print("执行了吗： ", new_name)
+                obj.image = new_name
+                print(" image1 上传执行了吗： ", new_name)
+            if image2file is not None:
+                file = image2file
+                new_name = getNewName('flower_img')  # 具体实现在自己写的uploads.py下
+                # 将要保存的地址和文件名称
+                where = '%s/flower/%s' % (settings.MEDIA_ROOT, new_name)
+                # 分块保存image
+                content = file.chunks()
+                with open(where, 'wb') as f:
+                    for i in content:
+                        f.write(i)
+                new_name = "/media/flower/" + new_name
+                # 上传文件名称到数据库
+
+                obj.image2 = new_name
+
+                print("image2 上传执行了吗： ", new_name)
+            if image3file is not None:
+                file = image3file
+                new_name = getNewName('flower_img')  # 具体实现在自己写的uploads.py下
+                # 将要保存的地址和文件名称
+                where = '%s/flower/%s' % (settings.MEDIA_ROOT, new_name)
+                # 分块保存image
+                content = file.chunks()
+                with open(where, 'wb') as f:
+                    for i in content:
+                        f.write(i)
+                new_name = "/media/flower/" + new_name
+                # 上传文件名称到数据库
+
+                obj.image3 = new_name
+                print("image3 上传 执行了吗： ", new_name)
+
             obj.save()
             # 返回的httpresponse
         except Exception as e:
