@@ -1,3 +1,5 @@
+import json
+
 from django.db import connection
 from django.db.models import Q
 from django.shortcuts import render
@@ -140,11 +142,12 @@ class OrdersDel(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def delete(self, request, *args, **kwargs):
-        order_id = request.GET.get("order_id")
-        if not order_id:
+        order_ids = request.GET.get("order_id")
+        oids=json.loads(order_ids)
+        if not oids:
             return BaseResponse(status=400, msg="order_id不能为空")
         try:
-            info = models.models.Order.objects.get(order_id=order_id)
+            info = models.models.Order.objects.filter(order_id__in=oids)
             info.delete()
             # print("sss: ",info.query)
         except models.models.Order.DoesNotExist:
