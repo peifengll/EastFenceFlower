@@ -225,41 +225,41 @@ class UploadImageView(APIView):
         print("request file ::", request.FILES)
 
         # 获取一个文件管理器对象
-        flowerid = request.data.get('flowerid')
+        flowerid = request.data.get('flower_id')
         if flowerid is None or flowerid == "":
             return BaseResponse(msg="flowerid 不能为空未获取到", status=401)
         imagefile, image2file, image3file = None, None, None
         if 'image' in request.FILES:
-            imagefile = request.FILES['image']
+            imagefile = request.FILES['editIamge1']
             print("image1 get")
 
         if 'image2' in request.FILES:
-            image2file = request.FILES['image2']
+            image2file = request.FILES['editImage2']
             print("image2 get")
 
         if 'image3' in request.FILES:
             print("image3 get")
-            image3file = request.FILES['image3']
+            image3file = request.FILES['editImage3']
 
-        fname = request.data.get("fname")
-        enname = request.data.get("enname")
-        buy = request.data.get("buy")
-        num = request.data.get("num")
-        sort = request.data.get("sort")
-        feed = request.data.get("feed")
-        nickname = request.data.get("nickname")
-        ldname = request.data.get("ldname")
-        brithplace = request.data.get("brithplace")
-        enplace = request.data.get("enplace")
-        use = request.data.get("use")
-        intor = request.data.get("intor")
+        fname = request.data.get("editFName")
+        enname = request.data.get("editFEnName")
+        buy = request.data.get("editInMoney")
+        num = request.data.get("editNum")
+        sort = request.data.get("editSort")
+        feed = request.data.get("editFeed")
+        nickname = request.data.get("editNickName")
+        ldname = request.data.get("editLdName")
+        brithplace = request.data.get("editBirthplcae")
+        enplace = request.data.get("editEnplace")
+        use = request.data.get("editUse")
+        intor = request.data.get("editIntro")
         temp = request.data.get("temp")
-        water = request.data.get("water")
-        light = request.data.get("light")
-        season = request.data.get("season")
-        manure = request.data.get("manure")
-        soil = request.data.get("soil")
-        lop = request.data.get("lop")
+        water = request.data.get("editWater")
+        light = request.data.get("editLight")
+        season = request.data.get("editSeason")
+        manure = request.data.get("editFei")
+        soil = request.data.get("editSoil")
+        lop = request.data.get("editCut")
 
         try:
             obj = models.Flower.objects.get(flower_id=flowerid)
