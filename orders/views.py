@@ -87,10 +87,10 @@ class OrdersSearch(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def get(self, request, *args, **kwargs):
-        order_id = request.data.get("order_id")
-        stage = request.data.get("stage")
-        user_id = request.data.get("user_id")
-        phone = request.data.get("phone")
+        order_id = request.GET.get("order_id")
+        stage = request.GET.get("stage")
+        user_id = request.GET.get("user_id")
+        phone = request.GET.get("phone")
         info = None
         try:
             query = Q()
