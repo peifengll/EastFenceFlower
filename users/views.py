@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.db.models import Q
@@ -141,10 +142,10 @@ class UserSearchView(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def get(self, request, *args, **kwargs):
-        name = request.data.get("name")
-        age = request.data.get("age")
-        user_id = request.data.get("user_id")
-        phone = request.data.get("phone")
+        name = request.GET.get("name")
+        age = request.GET.get("age")
+        user_id = request.GET.get("user_id")
+        phone = request.GET.get("phone")
         # name = request.data.get("name")
         # age = request.data.get("age")
         # user_id = request.data.get("user_id")
@@ -242,15 +243,17 @@ class UserDel(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def delete(self, request, *args, **kwargs):
-        userid = request.GET.get("userid")
-        if not userid:
+        userids = request.GET.get("userid")
+        uids=json.loads(userids)
+        if not uids:
             return BaseResponse(data="", status=400, msg="userid 不能为空")
         try:
-            user = models.models.User.objects.get(user_id=userid)
+            user = models.models.User.objects.filter(user_id__in=uids)
             user.delete()
         except models.models.User.DoesNotExist:
             return BaseResponse(status=322, msg="用户不存在")
         except Exception as e:
+            print(e.__str__())
             return BaseResponse(data="", status=500, msg="删除失败")
         return BaseResponse(status=200, msg="删除成功")
 
