@@ -1,14 +1,12 @@
-from django.shortcuts import render
+from datetime import datetime
 
 # Create your views here.
 
-from django.db import connection
-from django.db.models import Q
-from django.shortcuts import render
 from rest_framework.views import APIView
 
 import models.models
 from libs.utils.base_response import BaseResponse
+from operate.serializer import OperateSerializer
 
 
 class OperateUpdateView(APIView):
@@ -21,7 +19,6 @@ class OperateUpdateView(APIView):
         gname = request.data.get("gname")
         goods_id = request.data.get("goods_id")
         size = request.data.get("size")
-        op_time = request.data.get("op_time")
         op_num = request.data.get("op_num")
         op_person = request.data.get("op_person")
         op_person_id = request.data.get("op_person_id")
@@ -36,8 +33,6 @@ class OperateUpdateView(APIView):
                 ovj.goods_id = goods_id
             if size:
                 ovj.size = size
-            if op_time:
-                ovj.op_time = op_time
             if op_num:
                 ovj.op_num = op_num
             if op_person:
@@ -62,7 +57,7 @@ class OperateAddView(APIView):
         gname = request.data.get("gname")
         goods_id = request.data.get("goods_id")
         size = request.data.get("size")
-        op_time = request.data.get("op_time")
+        op_time = datetime.now()
         op_num = request.data.get("op_num")
         op_person = request.data.get("op_person")
         op_person_id = request.data.get("op_person_id")
@@ -83,3 +78,17 @@ class OperateAddView(APIView):
             print(e.__str__())
             return BaseResponse(status=500, msg="服务器内部错误" + e.__str__())
         return BaseResponse(status=200, msg="操作成功")
+
+
+class OperateShowView(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+        try:
+            res = models.models.Operate.objects.all()
+            ser = OperateSerializer(res, many=True)
+        except Exception as e:
+            print(e.__str__())
+            return BaseResponse(status=500, msg="服务器内部错误" + e.__str__())
+        return BaseResponse(data=ser.data, status=200, msg="操作成功")
