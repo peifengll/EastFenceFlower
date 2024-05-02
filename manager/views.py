@@ -154,3 +154,40 @@ class ManagerUpdateView(APIView):
         except Exception as e:
             return BaseResponse(status=500, msg="服务器内部错误" + e.__str__())
         return BaseResponse(status=200, msg="修改成功")
+
+
+class ManagerSearchView(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+
+    def get(self, request, *args, **kwargs):
+        name = request.GET.get("name")
+        phone = request.GET.get("phone")
+
+        restrict = request.GET.get("restrict")
+        manager_id = request.GET.get("manager_id")
+        stage = request.GET.get("stage")
+
+        try:
+            query = Q()
+            if name:
+                query &= Q(mname__icontains=name)
+            if phone:
+                query &= Q(phone__icontains=phone)
+
+            if manager_id:
+                query &= Q(manager_id=manager_id)
+            if restrict:
+                query &= Q(restrict=restrict)
+            if stage:
+                query &= Q(manager_id=stage)
+
+            userList = models.models.Manager.objects.filter(query)
+            print("sql: ")
+            print(query)
+            print(userList.query.__str__())
+            ser = serializer.ManagerShowSerializer(userList, many=True)
+        except Exception as e:
+            return BaseResponse(data=None, status=500, msg="查询失败" + e.__str__())
+        # print("userlist", userList)
+        return BaseResponse(data=ser.data, status=200, msg="查询成功")
