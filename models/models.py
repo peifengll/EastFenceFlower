@@ -264,7 +264,7 @@ class Order(models.Model):
     aname = models.CharField(max_length=50, blank=True, null=False, db_comment='收货人名字')
     address = models.CharField(max_length=50, blank=True, null=False, db_comment='收货人地址')
     phone = models.CharField(max_length=50, blank=True, null=False, db_comment='收货人手机号')
-    goods_id = models.IntegerField(blank=True, null=True, db_comment='商品编号')
+    goods_id = models.CharField(max_length=40,blank=True, null=True, db_comment='商品编号')
     num = models.IntegerField(blank=True, null=True, db_comment='数量')
 
     class Meta:
