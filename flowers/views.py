@@ -220,19 +220,26 @@ class UploadImageView(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def post(self, request):
+        print("request data ::", request.data)
+        print('*' * 10)
+        print("request file ::", request.FILES)
+
         # 获取一个文件管理器对象
         flowerid = request.data.get('flowerid')
-        index = request.data.get('index')
-        print("flowerid", flowerid, "index", index)
         if flowerid is None or flowerid == "":
             return BaseResponse(msg="flowerid 不能为空未获取到", status=401)
         imagefile, image2file, image3file = None, None, None
         if 'image' in request.FILES:
             imagefile = request.FILES['image']
+            print("image1 get")
+
         if 'image2' in request.FILES:
             image2file = request.FILES['image2']
+            print("image2 get")
+
         if 'image3' in request.FILES:
-            image3file = request.FILES['image2']
+            print("image3 get")
+            image3file = request.FILES['image3']
 
         fname = request.data.get("fname")
         enname = request.data.get("enname")
