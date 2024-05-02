@@ -1,3 +1,5 @@
+import json
+
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -161,12 +163,15 @@ class GoodsDeleteById(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def delete(self, request, *args, **kwargs):
-        id = request.GET.get('goodsid')
-        if id is None:
+        ids = request.GET.get('goodsid')
+        gids = json.loads(ids)
+        if gids is None:
             return BaseResponse(status=400, msg="参数错误")
         try:
-            info = models.Goods.objects.filter(goods_id=id).delete()
+            info = models.Goods.objects.filter(goods_id__in=gids).delete()
             print(info)
+        except models.Goods.DoesNotExist:
+            return BaseResponse(status=322, msg="goods 信息不存在")
         except  Exception as e:
             print(e.__str__())
             return BaseResponse(status=500, msg=e.__str__())
