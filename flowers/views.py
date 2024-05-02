@@ -20,10 +20,12 @@ class FlowerInfoSearch(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def get(self, request, *args, **kwargs):
-        fid = request.data.get('flowerid')
-        name = request.data.get('fname')
-        sort = request.data.get('sort')
-        place = request.data.get('birthplace')
+        fid = request.GET.get('flowerid')
+        name = request.GET.get('fname')
+        sort = request.GET.get('sort')
+        place = request.GET.get('place')
+        season = request.GET.get('season')
+        feed = request.GET.get('feed')
         info = None
         try:
             # 构建查询条件
@@ -34,11 +36,16 @@ class FlowerInfoSearch(APIView):
                 query &= Q(fname__icontains=name)
             if sort:
                 query &= Q(sort=sort)
+            if feed:
+                query &= Q(feed=feed)
+            if season:
+                query &= Q(season=season)
             if place:
                 query &= Q(brithplace__icontains=place)
             info = models.Flower.objects.filter(query)
             print(info.query.__str__())
         except Exception as e:
+            print(e.__str__())
             return BaseResponse(status=500, msg="服务器错误" + e.__str__())
         ser = FlowerSerializer(info, many=True)
         return BaseResponse(data=ser.data, status=200, msg="操作成功")
@@ -110,7 +117,7 @@ class FlowerDel(APIView):
 
     def delete(self, request, *args, **kwargs):
         fids = request.GET.get('flowerid')
-        f_ids=json.loads(fids)
+        f_ids = json.loads(fids)
         print(f_ids)
         try:
             info = models.Flower.objects.filter(flower_id__in=f_ids)
