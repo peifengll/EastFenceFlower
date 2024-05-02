@@ -43,10 +43,10 @@ class GoodsInfoSearch(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def get(self, request, *args, **kwargs):
-        id = request.data.get('goodsid')
-        name = request.data.get('goodsname')
-        category = request.data.get('goodsort')
-        stage = request.data.get('stage')
+        id = request.GET.get('goodsid')
+        name = request.GET.get('goodsname')
+        category = request.GET.get('goodsort')
+        stage = request.GET.get('stage')
         info = None
         print(name, category)
         try:
