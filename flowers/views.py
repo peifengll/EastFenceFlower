@@ -176,6 +176,8 @@ class FlowerUpdate(APIView):
                 obj.feed = feed
             if nickname:
                 obj.nickname = nickname
+            if buy:
+                obj.buy = buy
             if ldname:
                 obj.ldname = ldname
             if brithplace:
@@ -227,11 +229,66 @@ class UploadImageView(APIView):
         file = None
         if 'pic' in request.FILES:
             file = request.FILES['pic']
-        if file is None:
-            return BaseResponse(msg="图片未获取到", status=308)
+        fname = request.data.get("fname")
+        enname = request.data.get("enname")
+        buy = request.data.get("buy")
+        num = request.data.get("num")
+        sort = request.data.get("sort")
+        feed = request.data.get("feed")
+        nickname = request.data.get("nickname")
+        ldname = request.data.get("ldname")
+        brithplace = request.data.get("brithplace")
+        enplace = request.data.get("enplace")
+        use = request.data.get("use")
+        intor = request.data.get("intor")
+        temp = request.data.get("temp")
+        water = request.data.get("water")
+        light = request.data.get("light")
+        season = request.data.get("season")
+        manure = request.data.get("manure")
+        soil = request.data.get("soil")
+        lop = request.data.get("lop")
 
         try:
-            obj = models.Flower.objects.filter(flower_id=flowerid)
+            obj = models.Flower.objects.get(flower_id=flowerid)
+            if fname:
+                obj.fname = fname
+            if enname:
+                obj.enname = enname
+            if buy:
+                obj.buy = buy
+            if num:
+                obj.num = num
+            if sort:
+                obj.sort = sort
+            if feed:
+                obj.feed = feed
+            if nickname:
+                obj.nickname = nickname
+            if ldname:
+                obj.ldname = ldname
+            if brithplace:
+                obj.brithplace = brithplace
+            if enplace:
+                obj.enplace = enplace
+            if use:
+                obj.use = use
+            if intor:
+                obj.intor = intor
+            if temp:
+                obj.temp = temp
+            if water:
+                obj.water = water
+            if light:
+                obj.light = light
+            if season:
+                obj.season = season
+            if manure:
+                obj.manure = manure
+            if soil:
+                obj.soil = soil
+            if lop:
+                obj.lop = lop
             if file is not None:
                 new_name = getNewName('flower_img')  # 具体实现在自己写的uploads.py下
                 # 将要保存的地址和文件名称
@@ -244,13 +301,13 @@ class UploadImageView(APIView):
                 new_name = "/media/flower/" + new_name
                 # 上传文件名称到数据库
                 if index == '1':
-                    obj.update(image=new_name)
+                    obj.image = new_name
                 elif index == '2':
-                    obj.update(image2=new_name)
+                    obj.image2 = new_name
                 elif index == '3':
-                    obj.update(image3=new_name)
-
+                    obj.image3 = new_name
                 print("执行了吗： ", new_name)
+            obj.save()
             # 返回的httpresponse
         except Exception as e:
             print(e)
