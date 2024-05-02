@@ -56,20 +56,22 @@ class ManagerDelView(APIView):
 
     def delete(self, request, *args, **kwargs):
         mids = request.GET.get("manager_ids")
-        print("122222222222222222")
-        mids=json.loads(mids)
-        print(mids[0])
-        print(mids[1])
-        print(mids[2])
+        # print("122222222222222222")
+        mids = json.loads(mids)
+        # print(mids[0])
+        # print(mids[0])
+        # print(mids[1])
+        # print(mids[2])
 
-        print("122222222222222222")
+        # print("122222222222222222")
         if not mids:
             return BaseResponse(data="", status=400, msg="manager_ids 不能为空")
         try:
-             models.models.Manager.objects.filter(manager_id__in=mids).delete()
+            models.models.Manager.objects.filter(manager_id__in=mids).delete()
         except models.models.User.DoesNotExist:
             return BaseResponse(status=322, msg="店员账户不存在")
         except Exception as e:
+            print(e.__str__())
             return BaseResponse(data="", status=500, msg="删除失败")
         return BaseResponse(status=200, msg="删除成功")
 
