@@ -141,10 +141,10 @@ class UserSearchView(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def get(self, request, *args, **kwargs):
-        name = request.GET.get("name")
-        age = request.GET.get("age")
-        user_id = request.GET.get("user_id")
-        phone = request.GET.get("phone")
+        name = request.data.get("name")
+        age = request.data.get("age")
+        user_id = request.data.get("user_id")
+        phone = request.data.get("phone")
         # name = request.data.get("name")
         # age = request.data.get("age")
         # user_id = request.data.get("user_id")
@@ -162,6 +162,7 @@ class UserSearchView(APIView):
                 query &= Q(phone__icontains=phone)
             userList = models.models.User.objects.filter(query)
             print("sql: ")
+            print(query)
             print(userList.query.__str__())
             ser = serializer.UserSerializer(userList, many=True)
         except Exception as e:
