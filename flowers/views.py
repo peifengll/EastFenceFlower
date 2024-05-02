@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 from django.db.models import Q
 from django.shortcuts import render
@@ -107,10 +109,11 @@ class FlowerDel(APIView):
     permission_classes = []  # 允许任何用户访问
 
     def delete(self, request, *args, **kwargs):
-        fid = request.GET.get('flowerid')
-        print(fid)
+        fids = request.GET.get('flowerid')
+        f_ids=json.loads(fids)
+        print(f_ids)
         try:
-            info = models.Flower.objects.get(flower_id=fid)
+            info = models.Flower.objects.filter(flower_id__in=f_ids)
             info.delete()
         except models.Flower.DoesNotExist:
             return BaseResponse(status=322, msg="要删除的对象不存在")

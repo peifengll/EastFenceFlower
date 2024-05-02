@@ -68,7 +68,7 @@ class ManagerDelView(APIView):
             return BaseResponse(data="", status=400, msg="manager_ids 不能为空")
         try:
             models.models.Manager.objects.filter(manager_id__in=mids).delete()
-        except models.models.User.DoesNotExist:
+        except models.models.Manager.DoesNotExist:
             return BaseResponse(status=322, msg="店员账户不存在")
         except Exception as e:
             print(e.__str__())
