@@ -18,7 +18,6 @@ class OperateUpdateView(APIView):
         op_name = request.data.get("op_name")
         gname = request.data.get("gname")
         goods_id = request.data.get("goods_id")
-        flowerid = request.data.get("flower_id")
         size = request.data.get("size")
         op_num = request.data.get("op_num")
         op_person = request.data.get("op_person")
@@ -43,13 +42,6 @@ class OperateUpdateView(APIView):
             if op_otherS:
                 ovj.op_otherS = op_otherS
             ovj.save()
-            if op_num:
-                good = models.models.Goods.objects.get(goods_id=goods_id)
-                flo = models.models.Flower.objects.get(flower_id=flowerid)
-                good.total_num += op_num
-                flo.num += op_num
-                good.save()
-                flo.save()
 
         except Exception as e:
             print(e.__str__())
@@ -71,8 +63,9 @@ class OperateAddView(APIView):
         op_person = request.data.get("op_person")
         op_person_id = request.data.get("op_person_id")
         op_other = request.data.get("op_other")
+        flowerid = request.data.get("flower_id")
         try:
-            models.models.Operate.objects.create(
+            c = models.models.Operate.objects.create(
                 op_name=op_name,
                 gname=gname,
                 goods_id=goods_id,
@@ -83,6 +76,30 @@ class OperateAddView(APIView):
                 op_person_id=op_person_id,
                 op_other=op_other,
             )
+            print(c)
+            if op_num:
+                if op_name == "0111":
+                    print("asas")
+                    good = models.models.Goods.objects.get(goods_id=goods_id)
+                    flo = models.models.Flower.objects.get(flower_id=flowerid)
+                    print(good)
+                    print(flo)
+                    good.total_num = str(int(good.total_num) + op_num)
+                    flo.num = str(int(flo.num) + op_num)
+                    print(good.total_num, " : ", flo.num)
+                    good.save()
+                    flo.save()
+                elif op_name == "0112":
+                    print("asas")
+                    good = models.models.Goods.objects.get(goods_id=goods_id)
+                    flo = models.models.Flower.objects.get(flower_id=flowerid)
+                    print(good)
+                    print(flo)
+                    good.total_num = str(int(good.total_num) - op_num)
+                    flo.num = str(int(flo.num) - op_num)
+                    print(good.total_num, " : ", flo.num)
+                    good.save()
+                    flo.save()
         except Exception as e:
             print(e.__str__())
             return BaseResponse(status=500, msg="服务器内部错误" + e.__str__())
