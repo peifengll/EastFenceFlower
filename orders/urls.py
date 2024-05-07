@@ -4,7 +4,8 @@
 
 from django.urls import path
 
-from orders.views import OrdersToDoNum, OrdersToDeliverNum, OrdersShowAll, OrdersSearch, OrdersDel, OrdersUpdate
+from orders.views import OrdersToDoNum, OrdersToDeliverNum, OrdersShowAll, OrdersSearch, OrdersDel, OrdersUpdate, \
+    OrderProfitView
 from users.views import ShowUsersInfo, ShowNewUsersToday
 
 urlpatterns = [
@@ -14,4 +15,5 @@ urlpatterns = [
     path('order/search', OrdersSearch.as_view()),
     path('order/update', OrdersUpdate.as_view()),
     path('order/del', OrdersDel.as_view()),
+    path('order/profit', OrderProfitView.as_view()),
 ]

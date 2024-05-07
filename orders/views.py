@@ -143,7 +143,7 @@ class OrdersDel(APIView):
 
     def delete(self, request, *args, **kwargs):
         order_ids = request.GET.get("order_id")
-        oids=json.loads(order_ids)
+        oids = json.loads(order_ids)
         if not oids:
             return BaseResponse(status=400, msg="order_id不能为空")
         try:
@@ -155,3 +155,35 @@ class OrdersDel(APIView):
         except Exception as e:
             return BaseResponse(status=500, msg=e.__str__())
         return BaseResponse(status=200, msg="删除成功")
+
+
+# 利润
+class OrderProfitView(APIView):
+    authentication_classes = []  # 禁用所有认证类
+    permission_classes = []  # 允许任何用户访问
+    def get(self, request, *args, **kwargs):
+        a=Before7Days()
+        print(a)
+        return BaseResponse(status=200, msg="查询成功",data=a)
+
+
+def Before7Days():
+    sql = "SELECT DATE(time) as date, SUM(money) as total_money FROM `order` WHERE time >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) GROUP BY DATE(time);"
+
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        raw_data = cursor.fetchall()
+        # 将元组列表转换为字典列表
+        data_dict_list = [dict(zip([col[0] for col in cursor.description], row)) for row in raw_data]
+    return data_dict_list
+
+def Before12Months():
+    sql = "SELECT DATE(time) as date, SUM(money) as total_money FROM `order` WHERE time >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) GROUP BY DATE(time);"
+
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        raw_data = cursor.fetchall()
+        # 将元组列表转换为字典列表
+        data_dict_list = [dict(zip([col[0] for col in cursor.description], row)) for row in raw_data]
+    return data_dict_list
+

@@ -33,7 +33,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         print(user)
         refresh = self.get_token(user)
         data = {"userId": user.id, "token": str(refresh.access_token), "refresh": str(refresh),
-                'username': user.username}
+                'username': user.username, 'mname': user.mname, 'phone': user.username,
+                'days': user.days, 'address': user.address, 'restrict': user.restrict,'sex':user.sex,
+                'age':user.age,'stage':user.stage,'photo':user.photo,'date':user.date}
         return data
 
 
